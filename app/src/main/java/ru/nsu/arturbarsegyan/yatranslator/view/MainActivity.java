@@ -1,4 +1,4 @@
-package ru.nsu.arturbarsegyan.yatranslator;
+package ru.nsu.arturbarsegyan.yatranslator.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,10 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import ru.nsu.arturbarsegyan.yatranslator.R;
+import ru.nsu.arturbarsegyan.yatranslator.presenter.Presenter;
+import ru.nsu.arturbarsegyan.yatranslator.presenter.PresenterBundle;
 
+public class MainActivity extends AppCompatActivity implements View {
+    private Presenter presenter;
     private TextView mTextMessage;
-
+    // todo: create presenter
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -27,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_notifications);
                     return true;
             }
+
             return false;
         }
 
@@ -37,9 +42,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
+        PresenterBundle presenterBundle = new PresenterBundle(getApplicationContext());
+        presenter = new Presenter(presenterBundle);
+        presenter.addView(this);
+
+        //mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
-
 }
