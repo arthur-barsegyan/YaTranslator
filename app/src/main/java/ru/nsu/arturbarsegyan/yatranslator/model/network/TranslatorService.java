@@ -10,5 +10,5 @@ import ru.nsu.arturbarsegyan.yatranslator.model.dto.TranslateResponse;
 public interface TranslatorService {
     @POST("/api/v1.5/tr.json/translate")
     Call<TranslateResponse> translate(@Query("key") String apiKey, @Query("lang") String langDirection,
-                                      @Body String userText);
+                                      @Query(value = "text", encoded = true) String userText);
 }
