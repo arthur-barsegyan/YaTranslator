@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View {
     private EditText translationView;
     private EditText userTextInputView;
     private Button initTranslationButton;
+    private Button changeTranslationDirection;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -88,6 +89,14 @@ public class MainActivity extends AppCompatActivity implements View {
         }
     };
 
+    private android.view.View.OnClickListener changeTranslationDirectionListener = new android.view.View.OnClickListener() {
+        @Override
+        public void onClick(android.view.View v) {
+            Log.v(TAG, "Change language translation");
+            presenter.swapTranslationLanguages();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,8 +105,8 @@ public class MainActivity extends AppCompatActivity implements View {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        srcLanguage = (Spinner) findViewById(R.id.spinner);
-        dstLanguage = (Spinner) findViewById(R.id.spinner2);
+        srcLanguage = (Spinner) findViewById(R.id.srcLanguage);
+        dstLanguage = (Spinner) findViewById(R.id.dstLanguage);
         srcLanguage.setOnItemSelectedListener(selectedSourceLangListener);
         dstLanguage.setOnItemSelectedListener(selectedDestinationLangListener);
 
@@ -106,6 +115,9 @@ public class MainActivity extends AppCompatActivity implements View {
 
         initTranslationButton = (Button) findViewById(R.id.button);
         initTranslationButton.setOnClickListener(translationInitListener);
+
+        changeTranslationDirection = (Button) findViewById(R.id.changeDirections);
+        changeTranslationDirection.setOnClickListener(changeTranslationDirectionListener);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -116,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View {
     }
 
     @Override
-    public void setLanguageSpinner(List<String> supportedLanguages) {
+    public void setLanguageList(List<String> supportedLanguages) {
         if (languageDirections == null) {
             languageDirections = supportedLanguages;
             spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
@@ -129,5 +141,15 @@ public class MainActivity extends AppCompatActivity implements View {
 
     public void setTranslationViewText(String translation) {
         translationView.setText(translation);
+    }
+
+    @Override
+    public void setSourceLanguage(String source) {
+        srcLanguage.setSelection(spinnerAdapter.getPosition(source));
+    }
+
+    @Override
+    public void setDestinationLanguage(String destination) {
+        dstLanguage.setSelection(spinnerAdapter.getPosition(destination));
     }
 }

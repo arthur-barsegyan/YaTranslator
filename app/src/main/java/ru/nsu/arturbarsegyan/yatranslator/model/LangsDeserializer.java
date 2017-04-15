@@ -1,9 +1,6 @@
 package ru.nsu.arturbarsegyan.yatranslator.model;
 
 
-import android.util.Log;
-
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -12,12 +9,13 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ru.nsu.arturbarsegyan.yatranslator.model.dto.Language;
 import ru.nsu.arturbarsegyan.yatranslator.model.dto.SupportLanguages;
-import ru.nsu.arturbarsegyan.yatranslator.model.dto.TranslateDirection;
 
 public class LangsDeserializer implements JsonDeserializer<SupportLanguages> {
 
@@ -27,16 +25,13 @@ public class LangsDeserializer implements JsonDeserializer<SupportLanguages> {
         JsonObject langs = object.getAsJsonObject("langs");
         Set<Map.Entry<String, JsonElement>> langsDirectionEntries = langs.entrySet();
 
-        List<TranslateDirection> supportLanguagesList = new ArrayList<>();
+        Map<String, String> supportLanguagesMap = new HashMap<>();
         for (Map.Entry<String, JsonElement> currentDirection : langsDirectionEntries) {
-            TranslateDirection current = new TranslateDirection();
-            current.setLanguageUI(currentDirection.getKey());
-            current.setLanguageName(currentDirection.getValue().getAsString());
-            supportLanguagesList.add(current);
+            supportLanguagesMap.put(currentDirection.getValue().getAsString(), currentDirection.getKey());
         }
 
         SupportLanguages supportDirections = new SupportLanguages();
-        supportDirections.setDirections(supportLanguagesList);
+        supportDirections.setSupportedLanguages(supportLanguagesMap);
         return supportDirections;
     }
 }

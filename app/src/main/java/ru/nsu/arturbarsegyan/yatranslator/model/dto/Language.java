@@ -1,8 +1,15 @@
 package ru.nsu.arturbarsegyan.yatranslator.model.dto;
 
 
-public class TranslateDirection {
-    public TranslateDirection() {}
+public class Language {
+    private String languageName;
+    private String languageUI;
+
+    public Language() {}
+    public Language(String name, String ui) {
+        languageName = name;
+        languageUI = ui;
+    }
 
     public String getLanguageUI() {
         return languageUI;
@@ -12,8 +19,6 @@ public class TranslateDirection {
         this.languageUI = languageUI;
     }
 
-    private String languageUI;
-
     public String getLanguageName() {
         return languageName;
     }
@@ -22,5 +27,4 @@ public class TranslateDirection {
         this.languageName = languageName;
     }
 
-    private String languageName;
 }

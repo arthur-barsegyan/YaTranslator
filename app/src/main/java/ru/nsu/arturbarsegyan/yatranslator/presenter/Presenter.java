@@ -1,62 +1,79 @@
 package ru.nsu.arturbarsegyan.yatranslator.presenter;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.couchbase.lite.Manager;
 import com.couchbase.lite.android.AndroidContext;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.nsu.arturbarsegyan.yatranslator.DBManager;
+import ru.nsu.arturbarsegyan.yatranslator.DataManager;
+import ru.nsu.arturbarsegyan.yatranslator.ModelBundle;
 import ru.nsu.arturbarsegyan.yatranslator.Observer;
 
 import ru.nsu.arturbarsegyan.yatranslator.model.Model;
 import ru.nsu.arturbarsegyan.yatranslator.model.ModelImpl;
-import ru.nsu.arturbarsegyan.yatranslator.model.dto.SupportLanguages;
-import ru.nsu.arturbarsegyan.yatranslator.model.dto.TranslateDirection;
 import ru.nsu.arturbarsegyan.yatranslator.view.View;
 
+// TODO: Presenter depends from CouchBase Context
 public class Presenter implements Observer {
+    private String TAG = Presenter.class.getSimpleName();
+
+    private DataManager dataManager;
     private Model model;
-    private Context appContext;
     private View view;
-    private Manager manager;
+    private Context appContext;
+
+    private List<String> supportedLangs;
+    private String currentSourceLang;
+    private String currentDestLang;
 
     public Presenter(PresenterBundle bundle) {
         appContext = bundle.getContext();
         view = bundle.getView();
 
-        try {
-            manager = new Manager(new AndroidContext(appContext), Manager.DEFAULT_OPTIONS);
-        } catch (IOException e) {
-            Log.d("Presenter", "DB Manager init error");
-        }
+        dataManager = new DBManager(new AndroidContext(appContext));
 
-        // We can create Model without DB abilities (part functionality)
-        model = new ModelImpl(manager);
+        // We can create Model without saving abilities (part functionality)
+        // Catch exception from DataManger and using DataStumManager (Stub class)
+        model = new ModelImpl(dataManager);
         model.subscribeObserver(this);
-        updateAvailableLanguages();
+        supportedLangs = model.getAvailableLanguages();
+
+        view.setLanguageList(supportedLangs);
+        setupDefaultLanguages();
     }
 
-    private void updateAvailableLanguages() {
-        SupportLanguages supportedLanguages = model.getAvailableLanguages();
-        List<String> languages = new ArrayList<>();
-        for (TranslateDirection currentLanguage : supportedLanguages.getDirections()) {
-            languages.add(currentLanguage.getLanguageName());
-        }
 
-        view.setLanguageSpinner(languages);
+    private void setupDefaultLanguages() {
+        currentSourceLang = "Английский";
+        currentDestLang = "Русский";
+
+        model.setSourceLanguage(currentSourceLang);
+        model.setDestinationLanguage(currentDestLang);
+
+        updateViewLanguageDirection();
     }
 
     public void addView(View view) {
         this.view = view;
     }
 
+    public void updateViewLanguageDirection() {
+        view.setSourceLanguage(currentSourceLang);
+        view.setDestinationLanguage(currentDestLang);
+    }
+
     @Override
-    public void update(String translation) {
-        view.setTranslationViewText(translation);
+    public void update(ModelBundle bundle) {
+        if (bundle.isLanguagesSupportUpdated()) {
+            supportedLangs = bundle.getSupportLanguages();
+            view.setLanguageList(supportedLangs);
+        }
+
+        if (bundle.isTranslationUpdated())
+            view.setTranslationViewText(bundle.getLastTranslationText());
     }
 
     public void getTranslation(String userString) {
@@ -64,10 +81,20 @@ public class Presenter implements Observer {
     }
 
     public void setSourceLanguage(String sourceLanguage) {
-        model.setOriginalLanguage(sourceLanguage);
+        model.setSourceLanguage(sourceLanguage);
     }
 
     public void setDestinationLanguage(String destinationLanguage) {
-        model.setLanguageOfTranslation(destinationLanguage);
+        model.setDestinationLanguage(destinationLanguage);
+    }
+
+    public void swapTranslationLanguages() {
+        model.swapTranslationLanguages();
+
+        String tempLang = currentSourceLang;
+        currentSourceLang = currentDestLang;
+        currentDestLang = tempLang;
+
+        updateViewLanguageDirection();
     }
 }

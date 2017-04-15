@@ -1,19 +1,21 @@
 package ru.nsu.arturbarsegyan.yatranslator.model.dto;
 
+
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.Map;
 
 public class SupportLanguages {
+    @SerializedName("langs")
+    private Map<String, String> supportedLanguages;
+
     public SupportLanguages() {}
 
-    public List<TranslateDirection> getDirections() {
-        return directions;
+    public Map<String, String> getSupportedLanguages() {
+        return supportedLanguages;
     }
 
-    public void setDirections(List<TranslateDirection> directions) {
-        this.directions = directions;
+    public void setSupportedLanguages(Map<String, String> supportedLanguages) {
+        this.supportedLanguages = supportedLanguages;
     }
-
-    private List<TranslateDirection> directions;
 }
