@@ -16,7 +16,6 @@ import ru.nsu.arturbarsegyan.yatranslator.Observer;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,12 +57,12 @@ public class ModelImpl implements Model  {
 
     // Assumed that Presenter doesn't need an abbreviation for the language
     @Override
-    public List<String> getAvailableLanguages() {
+    public ArrayList<String> getAvailableLanguages() {
         // TODO: Handle failed request
         if (supportLanguages == null)
             downloadAvailableLanguages(false);
 
-        List<String> supportedLanguagesList = new ArrayList<>();
+        ArrayList<String> supportedLanguagesList = new ArrayList<>();
 //        for (Map.Entry<String, String> currentLang : supportLanguages.entrySet()) {
 //            supportedLanguagesList.add(currentLang.getValue());
 //        }

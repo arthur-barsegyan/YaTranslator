@@ -1,5 +1,6 @@
 package ru.nsu.arturbarsegyan.yatranslator.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.nsu.arturbarsegyan.yatranslator.Observable;
@@ -7,7 +8,7 @@ import ru.nsu.arturbarsegyan.yatranslator.Observable;
 
 public interface Model extends Observable {
     void requestTranslation(final String userString);
-    List<String> getAvailableLanguages();
+    ArrayList<String> getAvailableLanguages();
 
     String getSourceLanguage();
     String getDestinationLanguage();

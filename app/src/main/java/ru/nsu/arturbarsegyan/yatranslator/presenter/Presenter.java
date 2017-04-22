@@ -1,6 +1,7 @@
 package ru.nsu.arturbarsegyan.yatranslator.presenter;
 
-import android.content.Context;
+// TODO: Check this dependency
+//import android.content.Context;
 
 import com.couchbase.lite.android.AndroidContext;
 
@@ -14,6 +15,7 @@ import ru.nsu.arturbarsegyan.yatranslator.Observer;
 
 import ru.nsu.arturbarsegyan.yatranslator.model.Model;
 import ru.nsu.arturbarsegyan.yatranslator.model.ModelImpl;
+import ru.nsu.arturbarsegyan.yatranslator.view.TranslatorFragment;
 import ru.nsu.arturbarsegyan.yatranslator.view.View;
 
 // TODO: Presenter depends from CouchBase Context
@@ -23,17 +25,18 @@ public class Presenter implements Observer {
     private DataManager dataManager;
     private Model model;
     private View view;
-    private Context appContext;
+    //private Context appContext;
 
-    private List<String> supportedLangs;
+    private ArrayList<String> supportedLangs;
     private String currentSourceLang;
     private String currentDestLang;
 
     public Presenter(PresenterBundle bundle) {
-        appContext = bundle.getContext();
+        //appContext = bundle.getContext();
         view = bundle.getView();
 
-        dataManager = new DBManager(new AndroidContext(appContext));
+        // We can using FileManager which store data in file (resources/data.txt)
+        dataManager = new DBManager(new AndroidContext(bundle.getContext()));
 
         // We can create Model without saving abilities (part functionality)
         // Catch exception from DataManger and using DataStumManager (Stub class)
@@ -45,7 +48,6 @@ public class Presenter implements Observer {
         setupDefaultLanguages();
     }
 
-
     private void setupDefaultLanguages() {
         currentSourceLang = "Английский";
         currentDestLang = "Русский";
@@ -56,8 +58,13 @@ public class Presenter implements Observer {
         updateViewLanguageDirection();
     }
 
+    public ArrayList<String> getSupportedLangs() {
+        return supportedLangs;
+    }
+
     public void addView(View view) {
         this.view = view;
+        view.setPresenter(this);
     }
 
     public void updateViewLanguageDirection() {
@@ -73,7 +80,7 @@ public class Presenter implements Observer {
         }
 
         if (bundle.isTranslationUpdated())
-            view.setTranslationViewText(bundle.getLastTranslationText());
+            view.setTranslationText(bundle.getLastTranslationText());
     }
 
     public void getTranslation(String userString) {

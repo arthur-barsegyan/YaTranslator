@@ -1,15 +1,15 @@
 package ru.nsu.arturbarsegyan.yatranslator;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class ModelBundle {
     private boolean isTranslationUpdated = false;
     private boolean isLanguagesSupportUpdated = false;
 
     private String lastTranslationText;
-    private List<String> supportLanguages;
+    private ArrayList<String> supportLanguages;
 
-    public ModelBundle(List<String> supportLanguages, String lastTranslationText) {
+    public ModelBundle(ArrayList<String> supportLanguages, String lastTranslationText) {
         if (supportLanguages != null) {
             setSupportLanguages(supportLanguages);
             isLanguagesSupportUpdated = true;
@@ -21,11 +21,11 @@ public class ModelBundle {
         }
     }
 
-    public List<String> getSupportLanguages() {
+    public ArrayList<String> getSupportLanguages() {
         return supportLanguages;
     }
 
-    public void setSupportLanguages(List<String> supportLanguages) {
+    public void setSupportLanguages(ArrayList<String> supportLanguages) {
         this.supportLanguages = supportLanguages;
     }
 
