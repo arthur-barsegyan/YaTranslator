@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">YaTranslator</string>
     <string name="title_translate">Translate</string>
-    <string name="title_favorites">Favorites</string>
+    <string name="title_user_activity">User Activity</string>
     <string name="title_settings">Settings</string>
     <string name="title_activity_user_translations">UserTranslationsActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="translation_input_area_hint">Введите текст для перевода</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>s
 </resources>

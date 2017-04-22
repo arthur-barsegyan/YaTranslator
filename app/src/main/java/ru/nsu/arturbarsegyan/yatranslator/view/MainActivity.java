@@ -12,23 +12,30 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ru.nsu.arturbarsegyan.yatranslator.R;
 import ru.nsu.arturbarsegyan.yatranslator.presenter.Presenter;
 import ru.nsu.arturbarsegyan.yatranslator.presenter.PresenterBundle;
+import ru.nsu.arturbarsegyan.yatranslator.view.dummy.DummyContent;
 
-public class MainActivity extends AppCompatActivity implements View, TranslatorFragment.OnTranslatorInteractionListener {
+public class MainActivity extends AppCompatActivity implements View, TranslatorFragment.OnTranslatorInteractionListener,
+                                                                UserActivityFragment.OnUserActivityInteractionListener{
     private String TAG = MainActivity.class.getSimpleName();
     private Presenter presenter;
 
-    TranslatorFragment translator;
+    TranslatorFragment translator = null;
+    UserActivityFragment userActivityFragment = null;
+
+    private void addFragment(Fragment fragment, String fragmentTag) {
+        getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.layoutFrame, fragment, fragmentTag)
+                                   .commit();
+    }
 
     // TODO: Store current showing fragment in backstack
-    private void addFragment(Fragment fragment) {
+    // TODO: Read about "replace" method
+    private void replaceFragment(Fragment fragment, String fragmentTag) {
         getSupportFragmentManager().beginTransaction()
-                                   .add(R.id.container, fragment)
+                                   .replace(R.id.layoutFrame, fragment, fragmentTag)
                                    .commit();
     }
 
@@ -39,9 +46,18 @@ public class MainActivity extends AppCompatActivity implements View, TranslatorF
             FragmentTransaction transaction = fragmentManager.beginTransaction();
 
             switch (item.getItemId()) {
-                case R.id.navigation_favorites:
+                case R.id.navigation_translate:
+                    replaceFragment(translator, "translator");
+                    return true;
+                case R.id.navigation_user_activity:
                     //transaction.addToBackStack(null);
-                    addFragment(new ItemFragment());
+                    if (userActivityFragment == null) {
+                        userActivityFragment = new UserActivityFragment();
+                        addFragment(userActivityFragment, "userActivity");
+                        return true;
+                    }
+
+                    replaceFragment(userActivityFragment, "userActivity");
                     return true;
             }
 
@@ -49,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View, TranslatorF
         }
     };
 
+    // TODO: Add information about current showed fragment in Bundle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,10 +85,10 @@ public class MainActivity extends AppCompatActivity implements View, TranslatorF
             presenter.addView(this);
 
         // TODO: We should get current active fragment and show it
-        TranslatorFragment translator = (TranslatorFragment) getSupportFragmentManager().findFragmentById(R.layout.fragment_translator);
+        translator = (TranslatorFragment) getSupportFragmentManager().findFragmentByTag("translator");
         if (translator == null) {
             translator = TranslatorFragment.newInstance(presenter.getSupportedLangs());
-            addFragment(translator);
+            addFragment(translator, "translator");
         }
     }
 
@@ -97,10 +114,6 @@ public class MainActivity extends AppCompatActivity implements View, TranslatorF
             imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
             Log.v(TAG, "Hiding keyboard");
         }
-    }
-
-    @Override
-    public void setLanguageList(List<String> languages) {
 
     }
 
@@ -134,5 +147,25 @@ public class MainActivity extends AppCompatActivity implements View, TranslatorF
     @Override
     public void voiceText(String textLang, String userText) {
         // TODO: Implement it
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
+    }
+
+    @Override
+    public void getFavoriteTranslations() {
+
+    }
+
+    @Override
+    public void showTranslation(String textLang, String favoriteTranslation) {
+
+    }
+
+    @Override
+    public void removeFavorite(String favoriteTranslation) {
+
     }
 }

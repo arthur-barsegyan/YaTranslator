@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/translator_fragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ru.nsu.arturbarsegyan.yatranslator.view.TranslatorFragment">
@@ -44,9 +45,10 @@
                 android:id="@+id/userInputArea"
                 android:layout_width="match_parent"
                 android:layout_height="91dp"
-                android:layout_weight="1"
+                android:layout_weight="0.21"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:hint="@string/translation_input_area_hint"
                 android:text="" />
 
             <TextView
@@ -54,7 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:textIsSelectable="true"
+                android:text="" />
 
         </LinearLayout>
 

@@ -44,7 +44,7 @@ public class Presenter implements Observer {
         model.subscribeObserver(this);
         supportedLangs = model.getAvailableLanguages();
 
-        view.setLanguageList(supportedLangs);
+        //view.setLanguageList(supportedLangs);
         setupDefaultLanguages();
     }
 
@@ -76,7 +76,7 @@ public class Presenter implements Observer {
     public void update(ModelBundle bundle) {
         if (bundle.isLanguagesSupportUpdated()) {
             supportedLangs = bundle.getSupportLanguages();
-            view.setLanguageList(supportedLangs);
+            //view.setLanguageList(supportedLangs);
         }
 
         if (bundle.isTranslationUpdated())

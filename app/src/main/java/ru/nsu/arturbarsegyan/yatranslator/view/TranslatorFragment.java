@@ -33,12 +33,15 @@ public class TranslatorFragment extends Fragment {
     private final String TAG = TranslatorFragment.class.getSimpleName();
     private final static String langsKey = "langs";
 
+    private final static String defaultSrcLang = "Русский";
+    private final static String defaultDstLang = "Английский";
+
     ArrayAdapter<String> spinnerAdapter;
     private Spinner srcLanguageSpinner;
     private Spinner dstLanguageSpinner;
     private List<String> languageDirections = null;
-    private String srcLanguage = "Русский";
-    private String dstLanguage = "Английский";
+    private String srcLanguage = defaultSrcLang;
+    private String dstLanguage = defaultDstLang;
 
     private TextView translationView;
     private EditText userTextInputView;
@@ -80,14 +83,20 @@ public class TranslatorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Bundle bundle = getArguments();
+
         View view = inflater.inflate(R.layout.fragment_translator, container, false);
         srcLanguageSpinner = (Spinner) view.findViewById(R.id.srcLanguage);
         dstLanguageSpinner = (Spinner) view.findViewById(R.id.dstLanguage);
         srcLanguageSpinner.setOnItemSelectedListener(selectedSourceLangListener);
         dstLanguageSpinner.setOnItemSelectedListener(selectedDestinationLangListener);
-        setLanguageList(bundle.getStringArrayList(langsKey));
+
+        if (bundle != null) {
+            setLanguageList(bundle.getStringArrayList(langsKey));
+            setDefaultLanguages();
+        }
 
         translationView = (TextView) view.findViewById(R.id.translationView);
+        //translationView.set
         userTextInputView = (EditText) view.findViewById(R.id.userInputArea);
         userTextInputView.setOnEditorActionListener(getTranslation);
 
@@ -149,8 +158,8 @@ public class TranslatorFragment extends Fragment {
     public void setLanguageList(List<String> supportedLanguages) {
         if (languageDirections == null) {
             languageDirections = supportedLanguages;
-            spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,
-                                                      languageDirections);
+            spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
+                                                languageDirections);
             srcLanguageSpinner.setAdapter(spinnerAdapter);
             dstLanguageSpinner.setAdapter(spinnerAdapter);
             spinnerAdapter.notifyDataSetChanged();
@@ -173,5 +182,15 @@ public class TranslatorFragment extends Fragment {
         String currentSrcLang = srcLanguage;
         setSourceLanguage(dstLanguage);
         setDestinationLanguage(currentSrcLang);
+
+        srcLanguageSpinner.setSelection(spinnerAdapter.getPosition(srcLanguage));
+        dstLanguageSpinner.setSelection(spinnerAdapter.getPosition(dstLanguage));
+    }
+
+    private void setDefaultLanguages() {
+        if (spinnerAdapter.getPosition(defaultSrcLang) > 0 && spinnerAdapter.getPosition(defaultDstLang) > 0) {
+            srcLanguageSpinner.setSelection(spinnerAdapter.getPosition(defaultSrcLang));
+            dstLanguageSpinner.setSelection(spinnerAdapter.getPosition(defaultDstLang));
+        }
     }
 }
