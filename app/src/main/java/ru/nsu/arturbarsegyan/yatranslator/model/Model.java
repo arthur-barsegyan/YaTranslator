@@ -1,10 +1,9 @@
 package ru.nsu.arturbarsegyan.yatranslator.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import ru.nsu.arturbarsegyan.yatranslator.Observable;
-import ru.nsu.arturbarsegyan.yatranslator.TranslationData;
+import ru.nsu.arturbarsegyan.yatranslator.shared.Observable;
+import ru.nsu.arturbarsegyan.yatranslator.shared.TranslationData;
 
 
 public interface Model extends Observable {
@@ -21,4 +20,6 @@ public interface Model extends Observable {
     ArrayList<TranslationData> getFavoriteTranslations();
 
     boolean isServerAvailable();
+
+    void backupData();
 }

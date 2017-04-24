@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import ru.nsu.arturbarsegyan.yatranslator.DataManager;
-import ru.nsu.arturbarsegyan.yatranslator.ModelBundle;
-import ru.nsu.arturbarsegyan.yatranslator.Observer;
+import ru.nsu.arturbarsegyan.yatranslator.datamanagers.DataManager;
+import ru.nsu.arturbarsegyan.yatranslator.shared.ModelBundle;
+import ru.nsu.arturbarsegyan.yatranslator.shared.Observer;
 
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +22,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import ru.nsu.arturbarsegyan.yatranslator.TranslationData;
+import ru.nsu.arturbarsegyan.yatranslator.shared.TranslationData;
 import ru.nsu.arturbarsegyan.yatranslator.model.dto.SupportLanguages;
 import ru.nsu.arturbarsegyan.yatranslator.model.dto.TranslateResponse;
 import ru.nsu.arturbarsegyan.yatranslator.model.network.SupportLanguagesService;
@@ -94,6 +94,11 @@ public class ModelImpl implements Model  {
 
     public boolean isServerAvailable() {
         return isServerAvailable;
+    }
+
+    @Override
+    public void backupData() {
+        dataManager.saveData();
     }
 
     // TODO: [IMPORTANT] Create waiting timeout

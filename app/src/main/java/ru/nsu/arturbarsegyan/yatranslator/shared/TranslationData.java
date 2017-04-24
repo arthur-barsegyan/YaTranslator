@@ -1,4 +1,4 @@
-package ru.nsu.arturbarsegyan.yatranslator;
+package ru.nsu.arturbarsegyan.yatranslator.shared;
 
 
 public class TranslationData {
@@ -7,6 +7,10 @@ public class TranslationData {
 
     private String srcLang;
     private String dstLang;
+
+    public TranslationData() {
+
+    }
 
     public TranslationData(String originalText, String translation, String srcLang, String dstLang) {
         this.originalText = originalText;

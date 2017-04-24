@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import ru.nsu.arturbarsegyan.yatranslator.DBManager;
-import ru.nsu.arturbarsegyan.yatranslator.DataManager;
-import ru.nsu.arturbarsegyan.yatranslator.ModelBundle;
-import ru.nsu.arturbarsegyan.yatranslator.Observer;
+import ru.nsu.arturbarsegyan.yatranslator.datamanagers.DBManager;
+import ru.nsu.arturbarsegyan.yatranslator.datamanagers.DataManager;
+import ru.nsu.arturbarsegyan.yatranslator.shared.ModelBundle;
+import ru.nsu.arturbarsegyan.yatranslator.shared.Observer;
 
-import ru.nsu.arturbarsegyan.yatranslator.TranslationData;
+import ru.nsu.arturbarsegyan.yatranslator.shared.TranslationData;
+import ru.nsu.arturbarsegyan.yatranslator.datamanagers.StubDataManager;
 import ru.nsu.arturbarsegyan.yatranslator.model.Model;
 import ru.nsu.arturbarsegyan.yatranslator.model.ModelImpl;
-import ru.nsu.arturbarsegyan.yatranslator.view.TranslatorFragment;
 import ru.nsu.arturbarsegyan.yatranslator.view.View;
 
 // TODO: Presenter depends from CouchBase Context
@@ -36,18 +36,19 @@ public class Presenter implements Observer {
     public Presenter(PresenterBundle bundle) {
         view = bundle.getView();
 
-        // We can using FileManager which store data in file (res/data.txt)
-        dataManager = new DBManager(new AndroidContext(bundle.getContext()));
+        try {
+            // We can create FileManager class which store data in file (res/data.txt)
+            dataManager = new DBManager(new AndroidContext(bundle.getContext()));
+        } catch (RuntimeException e) {
+            /* We can create Model without saving abilities (part functionality)
+               Catch exception from DataManger and using DataStubManager (Stub class) */
+            dataManager = new StubDataManager();
+        }
 
-        // We can create Model without saving abilities (part functionality)
-        // Catch exception from DataManger and using DataStubManager (Stub class)
         model = new ModelImpl(dataManager);
         model.subscribeObserver(this);
         supportedLangs = model.getAvailableLanguages();
         configureLanguageList();
-
-        //view.setLanguageList(supportedLangs);
-        //setupDefaultLanguages();
     }
 
     private void configureLanguageList() {
@@ -102,8 +103,12 @@ public class Presenter implements Observer {
             //view.setLanguageList(supportedLangs);
         }
 
-        if (bundle.isTranslationUpdated())
+        if (bundle.isTranslationUpdated()) {
+            if (!model.isServerAvailable())
+                view.showServerUnavailableState();
+
             view.setTranslationText(bundle.getLastTranslationText());
+        }
     }
 
     public void getTranslation(String userString) {
@@ -142,13 +147,11 @@ public class Presenter implements Observer {
         return favoriteTranslations;
     }
 
-    public void updateView() {
-        if (!model.isServerAvailable()) {
-            view.showServerUnavailableState();
-        }
-    }
-
     public boolean getServerStatus() {
         return model.isServerAvailable();
+    }
+
+    public void viewClosed() {
+        model.backupData();
     }
 }

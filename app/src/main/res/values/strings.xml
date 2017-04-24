@@ -6,7 +6,7 @@
     <string name="title_activity_user_translations">UserTranslationsActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="network_unavailable_text">Сервер недоступен или у вас отсутствует соединение с интернетом</string>
+    <string name="network_unavailable_text">Проблема с соединением. Перезагрузите, пожалуйста, приложение</string>
     <string name="translation_input_area_hint">Введите текст для перевода</string>
     <string name="usage_text">Переведено сервисом «Яндекс.Переводчик»</string>
 

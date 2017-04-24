@@ -17,7 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import java.util.ArrayList;
 
 import ru.nsu.arturbarsegyan.yatranslator.R;
-import ru.nsu.arturbarsegyan.yatranslator.TranslationData;
+import ru.nsu.arturbarsegyan.yatranslator.shared.TranslationData;
 import ru.nsu.arturbarsegyan.yatranslator.presenter.Presenter;
 import ru.nsu.arturbarsegyan.yatranslator.presenter.PresenterBundle;
 import ru.nsu.arturbarsegyan.yatranslator.view.dummy.DummyContent;
@@ -105,6 +105,12 @@ public class MainActivity extends AppCompatActivity implements View, TranslatorF
         }
 
 //        presenter.updateView();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.viewClosed();
     }
 
     @Override

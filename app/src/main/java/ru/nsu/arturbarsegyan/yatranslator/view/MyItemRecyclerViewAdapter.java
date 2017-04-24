@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ru.nsu.arturbarsegyan.yatranslator.R;
-import ru.nsu.arturbarsegyan.yatranslator.TranslationData;
+import ru.nsu.arturbarsegyan.yatranslator.shared.TranslationData;
 import ru.nsu.arturbarsegyan.yatranslator.view.UserActivityFragment.OnUserActivityInteractionListener;
 import ru.nsu.arturbarsegyan.yatranslator.view.dummy.DummyContent.DummyItem;
 

@@ -13,8 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ru.nsu.arturbarsegyan.yatranslator.R;
-import ru.nsu.arturbarsegyan.yatranslator.TranslationData;
-import ru.nsu.arturbarsegyan.yatranslator.view.dummy.DummyContent;
+import ru.nsu.arturbarsegyan.yatranslator.shared.TranslationData;
 import ru.nsu.arturbarsegyan.yatranslator.view.dummy.DummyContent.DummyItem;
 
 // TODO: [IMPORTANT] Make this fragment specially for user favorite translations

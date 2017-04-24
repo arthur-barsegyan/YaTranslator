@@ -1,4 +1,4 @@
-package ru.nsu.arturbarsegyan.yatranslator;
+package ru.nsu.arturbarsegyan.yatranslator.datamanagers;
 
 import android.util.Log;
 
@@ -12,11 +12,10 @@ import com.couchbase.lite.android.AndroidContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import ru.nsu.arturbarsegyan.yatranslator.model.dto.Language;
-import ru.nsu.arturbarsegyan.yatranslator.model.dto.SupportLanguages;
+import ru.nsu.arturbarsegyan.yatranslator.shared.TranslationData;
 
 public class DBManager implements DataManager {
     private static final String TAG = DBManager.class.getSimpleName();
@@ -29,25 +28,34 @@ public class DBManager implements DataManager {
     private Database db = null;
     private Document languages;
 
-    //boolean isDBWorking = false;
-
     // TODO: [IMPORTANT] Read about Loaders
     public DBManager(AndroidContext context) {
         try {
             this.dbManager = new Manager(context, Manager.DEFAULT_OPTIONS);
             options.setCreate(true);
 
-            db = dbManager.getDatabase(dbName);
-            Log.v(TAG, "DB successfully opened");
-        } catch (CouchbaseLiteException e) {
-            Log.w(TAG, "DB init problems! Can't create/load DB");
+            initDB();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void initDB() {
+        try {
+            if (db != null && db.isOpen())
+                return;
+
+            db = dbManager.getDatabase(dbName);
+            Log.v(TAG, "DB successfully opened");
+        } catch (CouchbaseLiteException e) {
+            Log.w(TAG, "DB init problems! Can't create/load DB");
+            throw new RuntimeException("DB init problems! Can't create/load DB");
+        }
+    }
+
     @Override
     public Map<String, String> getTranslationLanguages() {
+        initDB();
         languages = db.getDocument(dbLanguagesDocument);
         Map<String, Object> languagesMap = languages.getProperties();
         if (languagesMap == null)
@@ -68,6 +76,7 @@ public class DBManager implements DataManager {
     @Override
     public boolean updateTranslationLanguages(Map<String, String> languages) {
         try {
+            initDB();
             Document document = db.getDocument(dbLanguagesDocument);
             Map<String, Object> langsMap = new HashMap<>();
 
@@ -89,6 +98,7 @@ public class DBManager implements DataManager {
     @Override
     public boolean addFavoriteTranslation(TranslationData translationData) {
         try {
+            initDB();
             Document document = db.getDocument(dbFavoriteTranslations);
             Map<String, Object> favoriteTranslations = new HashMap<>();
             if (document.getProperties() != null)
@@ -108,23 +118,28 @@ public class DBManager implements DataManager {
 
     @Override
     public ArrayList<TranslationData> getFavoriteTranslations() {
-        //try {
-            Document document = db.getDocument(dbFavoriteTranslations);
-            Map<String, Object> favoriteTranslation = document.getProperties();
-            ArrayList<TranslationData> favoriteTranslationList = new ArrayList<>();
+        initDB();
+        Document document = db.getDocument(dbFavoriteTranslations);
+        Map<String, Object> favoriteTranslation = document.getProperties();
+        ArrayList<TranslationData> favoriteTranslationList = new ArrayList<>();
 
-            if (favoriteTranslation == null)
-                return favoriteTranslationList;
-
-            for (Map.Entry<String, Object> currentTranslation : favoriteTranslation.entrySet()) {
-                try {
-                    favoriteTranslationList.add((TranslationData) currentTranslation.getValue());
-                } catch (ClassCastException e) {}
-            }
-
+        if (favoriteTranslation == null)
             return favoriteTranslationList;
-        //}
-        //return null;
+
+        for (Map.Entry<String, Object> currentTranslation : favoriteTranslation.entrySet()) {
+            try {
+                LinkedHashMap<String, String> rawData = (LinkedHashMap<String, String>) currentTranslation.getValue();
+                TranslationData translationData = new TranslationData(rawData.get("originalText"),
+                                                                      rawData.get("translation"),
+                                                                      rawData.get("srcLang"),
+                                                                      rawData.get("dstLang"));
+                favoriteTranslationList.add(translationData);
+            } catch (ClassCastException e) {
+
+            }
+        }
+
+        return favoriteTranslationList;
     }
 
     @Override
@@ -135,5 +150,10 @@ public class DBManager implements DataManager {
     @Override
     public boolean updateUserSetting() {
         return false;
+    }
+
+    @Override
+    public void saveData() {
+        db.close();
     }
 }
