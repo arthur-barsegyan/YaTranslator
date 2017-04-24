@@ -141,4 +141,14 @@ public class Presenter implements Observer {
         ArrayList<TranslationData> favoriteTranslations = model.getFavoriteTranslations();
         return favoriteTranslations;
     }
+
+    public void updateView() {
+        if (!model.isServerAvailable()) {
+            view.showServerUnavailableState();
+        }
+    }
+
+    public boolean getServerStatus() {
+        return model.isServerAvailable();
+    }
 }

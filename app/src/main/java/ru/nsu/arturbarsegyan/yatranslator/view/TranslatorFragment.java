@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,6 +28,7 @@ public class TranslatorFragment extends Fragment {
     public interface OnTranslatorInteractionListener {
         void setTranslatorFragmentOccurence();
 
+        boolean getServerStatus();
         void getTranslation(String srcLang, String dstLang, String userText);
         void addFavoriteTranslation(String userText);
         void voiceText(String textLang, String userText);
@@ -48,6 +51,7 @@ public class TranslatorFragment extends Fragment {
     private TextView translationView;
     private EditText userTextInputView;
     private Button changeTranslationDirection;
+    private LinearLayout networkImageLayout;
 
     private OnTranslatorInteractionListener listener;
 
@@ -127,6 +131,13 @@ public class TranslatorFragment extends Fragment {
             }
         });
 
+        try {
+            networkImageLayout = (LinearLayout) view.findViewById(R.id.networkStateLayout);
+            if (!listener.getServerStatus())
+                showServerAvailableStatus(false);
+        } catch (Exception e ) {
+            System.out.println(e.getMessage());
+        }
         return view;
     }
 
@@ -192,6 +203,11 @@ public class TranslatorFragment extends Fragment {
     }
 
     public void setLanguageList(List<String> supportedLanguages) {
+        /* [Future plans] We can record current supported languages in DataManager and include this in APK.
+           After that we can init spinners in case that we don't have network connection and e.t.c*/
+        if (supportedLanguages == null)
+            return;
+
         if (languageDirections == null) {
             languageDirections = supportedLanguages;
             spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
@@ -205,6 +221,7 @@ public class TranslatorFragment extends Fragment {
     }
 
     public void setTranslationViewText(String translation) {
+        showServerAvailableStatus(true);
         translationView.setText(translation);
     }
 
@@ -230,5 +247,12 @@ public class TranslatorFragment extends Fragment {
             srcLanguageSpinner.setSelection(spinnerAdapter.getPosition(defaultSrcLang));
             dstLanguageSpinner.setSelection(spinnerAdapter.getPosition(defaultDstLang));
         }
+    }
+
+    public void showServerAvailableStatus(boolean isAvailable) {
+        if (!isAvailable)
+            networkImageLayout.setVisibility(View.VISIBLE);
+        else
+            networkImageLayout.setVisibility(View.INVISIBLE);
     }
 }

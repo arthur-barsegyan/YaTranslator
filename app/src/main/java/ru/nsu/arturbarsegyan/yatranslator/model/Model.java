@@ -21,6 +21,6 @@ public interface Model extends Observable {
 
     boolean addFavoriteTranslation(String favoriteTranslation);
     ArrayList<TranslationData> getFavoriteTranslations();
-// Observer при обновлении должен обновлять сразу все данные или можно разделять наблюдателей по категориям?
-// В данном случае наверное проще было бы обновлять все данные в наблюдателе сразу (сразу менять данные в GUI)
+
+    boolean isServerAvailable();
 }

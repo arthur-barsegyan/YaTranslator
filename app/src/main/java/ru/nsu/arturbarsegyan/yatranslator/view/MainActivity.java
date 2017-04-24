@@ -101,11 +101,10 @@ public class MainActivity extends AppCompatActivity implements View, TranslatorF
         // TODO: We should get current active fragment and show it
         translator = (TranslatorFragment) getSupportFragmentManager().findFragmentByTag("translator");
         if (translator == null) {
-            translator = TranslatorFragment.newInstance(presenter.getSupportedLangs());
-            getSupportFragmentManager().beginTransaction()
-                                       .replace(R.id.layoutFrame, translator, "translator")
-                                       .commit();
+            createTranslatorFragment();
         }
+
+//        presenter.updateView();
     }
 
     @Override
@@ -126,6 +125,23 @@ public class MainActivity extends AppCompatActivity implements View, TranslatorF
     @Override
     public void showSaveErrorMessage(String errorMsg) {
         // TODO: [IMPORTANT] Implement this
+    }
+
+    private void createTranslatorFragment() {
+        translator = TranslatorFragment.newInstance(presenter.getSupportedLangs());
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.layoutFrame, translator, "translator")
+                .commit();
+    }
+
+    @Override
+    public void showServerUnavailableState() {
+//        if (translator == null)
+//            createTranslatorFragment();
+//        else
+//            replaceFragment(translator, "translator");
+
+        translator.showServerAvailableStatus(false);
     }
 
     public void hideKeyboard(android.view.View focusedView) {
@@ -163,6 +179,11 @@ public class MainActivity extends AppCompatActivity implements View, TranslatorF
     @Override
     public void setTranslatorFragmentOccurence() {
         setNavigationItemSelected(TRANSLATOR_ITEM_ID);
+    }
+
+    @Override
+    public boolean getServerStatus() {
+        return presenter.getServerStatus();
     }
 
     @Override

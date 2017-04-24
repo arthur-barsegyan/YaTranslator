@@ -49,10 +49,13 @@ public class DBManager implements DataManager {
     @Override
     public Map<String, String> getTranslationLanguages() {
         languages = db.getDocument(dbLanguagesDocument);
-        Map<String, Object> languagesProperties = languages.getProperties();
+        Map<String, Object> languagesMap = languages.getProperties();
+        if (languagesMap == null)
+            return null;
+
         Map<String, String> supportLanguages = new HashMap<>();
 
-        for (Map.Entry<String, Object> currentLanguage : languagesProperties.entrySet()) {
+        for (Map.Entry<String, Object> currentLanguage : languagesMap.entrySet()) {
             supportLanguages.put(currentLanguage.getKey(), (String) currentLanguage.getValue());
         }
 

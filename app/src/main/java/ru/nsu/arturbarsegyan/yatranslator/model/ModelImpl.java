@@ -43,6 +43,8 @@ public class ModelImpl implements Model  {
     private String userLastTranslation = null;
     private Set<Observer> observers = new HashSet<>();
 
+    private boolean isServerAvailable = true;
+
     public ModelImpl(DataManager dataManager) {
         Log.v(TAG, "Model constructor");
         gson = new GsonBuilder()
@@ -62,10 +64,18 @@ public class ModelImpl implements Model  {
         if (supportLanguages == null)
             downloadAvailableLanguages(false);
 
+        /* If we can't get support languages from server we getting it from DataManager
+           (Backups for offline mode) */
+        if (supportLanguages == null) {
+            supportLanguages = dataManager.getTranslationLanguages();
+            isServerAvailable = false;
+
+            if (supportLanguages == null) {
+                return null;
+            }
+        }
+
         ArrayList<String> supportedLanguagesList = new ArrayList<>();
-//        for (Map.Entry<String, String> currentLang : supportLanguages.entrySet()) {
-//            supportedLanguagesList.add(currentLang.getValue());
-//        }
         for (String currentLang : supportLanguages.keySet())
             supportedLanguagesList.add(currentLang);
 
@@ -80,6 +90,10 @@ public class ModelImpl implements Model  {
     @Override
     public String getDestinationLanguage() {
         return destinationLanguage;
+    }
+
+    public boolean isServerAvailable() {
+        return isServerAvailable;
     }
 
     // TODO: [IMPORTANT] Create waiting timeout
@@ -103,6 +117,8 @@ public class ModelImpl implements Model  {
                 notifyObservers(supportLanguages, null);
         } catch (IOException e) {
             Log.v(TAG, "Failure request", e);
+        } catch (NullPointerException e) {
+            Log.e(TAG, "Receive empty response with supported languages!");
         }
     }
 

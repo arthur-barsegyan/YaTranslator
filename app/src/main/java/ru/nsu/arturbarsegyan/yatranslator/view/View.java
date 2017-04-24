@@ -14,4 +14,5 @@ public interface View {
     void setPresenter(Presenter presenter);
 
     void showSaveErrorMessage(String errorMsg);
+    void showServerUnavailableState();
 }
