@@ -5,8 +5,9 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.nsu.arturbarsegyan.yatranslator.view.MainActivity"
-    android:orientation="vertical">
+    android:elevation="7dp"
+    android:orientation="vertical"
+    tools:context="ru.nsu.arturbarsegyan.yatranslator.view.MainActivity">
 
     <FrameLayout
         android:id="@+id/layoutFrame"
@@ -21,13 +22,6 @@
             android:layout_gravity="bottom"
             android:background="?android:attr/windowBackground"
             app:menu="@menu/navigation" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </RelativeLayout>
-
     </FrameLayout>
 
 </LinearLayout>

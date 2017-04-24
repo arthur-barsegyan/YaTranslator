@@ -22,7 +22,8 @@ public class DBManager implements DataManager {
     private static final String TAG = DBManager.class.getSimpleName();
 
     private final String dbName = "yatranslatordb";
-    private final String dbLanguagesDocument = "yatranslatorlanguages";
+    private final String dbLanguagesDocument = "languages";
+    private final String dbFavoriteTranslations = "favorite_translations";
     private DatabaseOptions options = new DatabaseOptions();
     private Manager dbManager;
     private Database db = null;
@@ -30,6 +31,7 @@ public class DBManager implements DataManager {
 
     //boolean isDBWorking = false;
 
+    // TODO: [IMPORTANT] Read about Loaders
     public DBManager(AndroidContext context) {
         try {
             this.dbManager = new Manager(context, Manager.DEFAULT_OPTIONS);
@@ -73,7 +75,28 @@ public class DBManager implements DataManager {
             document.putProperties(langsMap);
         } catch (CouchbaseLiteException e) {
             Log.e(TAG, "Problems with writing translation languages in DB");
-            // TODO: Handle this
+            return false;
+        }
+
+        return true;
+    }
+
+    /* Creating a special key for every translation:
+        hash(Original text + Source Lang + '-' + Dest Lang) */
+    @Override
+    public boolean addFavoriteTranslation(TranslationData translationData) {
+        try {
+            Document document = db.getDocument(dbFavoriteTranslations);
+            Map<String, Object> favoriteTranslations = new HashMap<>();
+            if (document.getProperties() != null)
+                favoriteTranslations.putAll(document.getProperties());
+
+            String currentKey = translationData.getOriginalText() + translationData.getSrcLang() + '-'
+                                                                  + translationData.getDstLang();
+            favoriteTranslations.put(currentKey, translationData);
+            document.putProperties(favoriteTranslations);
+        } catch (CouchbaseLiteException e) {
+            Log.e(TAG, "Problems with saving favorite translation!");
             return false;
         }
 
@@ -81,12 +104,28 @@ public class DBManager implements DataManager {
     }
 
     @Override
-    public boolean addFavoriteTranslation() {
-        return false;
+    public ArrayList<TranslationData> getFavoriteTranslations() {
+        //try {
+            Document document = db.getDocument(dbFavoriteTranslations);
+            Map<String, Object> favoriteTranslation = document.getProperties();
+            ArrayList<TranslationData> favoriteTranslationList = new ArrayList<>();
+
+            if (favoriteTranslation == null)
+                return favoriteTranslationList;
+
+            for (Map.Entry<String, Object> currentTranslation : favoriteTranslation.entrySet()) {
+                try {
+                    favoriteTranslationList.add((TranslationData) currentTranslation.getValue());
+                } catch (ClassCastException e) {}
+            }
+
+            return favoriteTranslationList;
+        //}
+        //return null;
     }
 
     @Override
-    public boolean addTranslationInHistory() {
+    public boolean addTranslationInHistory(TranslationData translationData) {
         return false;
     }
 

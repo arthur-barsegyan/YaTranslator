@@ -12,4 +12,6 @@ public interface View {
     void setDestinationLanguage(String destination);
 
     void setPresenter(Presenter presenter);
+
+    void showSaveErrorMessage(String errorMsg);
 }

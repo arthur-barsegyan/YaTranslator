@@ -24,6 +24,8 @@ import ru.nsu.arturbarsegyan.yatranslator.R;
 
 public class TranslatorFragment extends Fragment {
     public interface OnTranslatorInteractionListener {
+        void setTranslatorFragmentOccurence();
+
         void getTranslation(String srcLang, String dstLang, String userText);
         void addFavoriteTranslation(String userText);
         void voiceText(String textLang, String userText);
@@ -99,11 +101,45 @@ public class TranslatorFragment extends Fragment {
         //translationView.set
         userTextInputView = (EditText) view.findViewById(R.id.userInputArea);
         userTextInputView.setOnEditorActionListener(getTranslation);
+        userTextInputView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                return false;
+            }
+        });
 
         changeTranslationDirection = (Button) view.findViewById(R.id.changeDirections);
         changeTranslationDirection.setOnClickListener(changeTranslationDirectionListener);
 
+        Button addToFavorites = (Button) view.findViewById(R.id.favoriteTranslation);
+        addToFavorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.addFavoriteTranslation(userTextInputView.getText().toString());
+            }
+        });
+
+        Button clearInput = (Button) view.findViewById(R.id.clearInput);
+        clearInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userTextInputView.setText("");
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        listener.setTranslatorFragmentOccurence();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        System.out.println("Paused Translator!");
     }
 
     private AdapterView.OnItemSelectedListener selectedSourceLangListener = new AdapterView.OnItemSelectedListener() {
@@ -160,10 +196,12 @@ public class TranslatorFragment extends Fragment {
             languageDirections = supportedLanguages;
             spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
                                                 languageDirections);
-            srcLanguageSpinner.setAdapter(spinnerAdapter);
-            dstLanguageSpinner.setAdapter(spinnerAdapter);
-            spinnerAdapter.notifyDataSetChanged();
         }
+
+        spinnerAdapter.setDropDownViewResource(R.layout.language_custom_spinner);
+        srcLanguageSpinner.setAdapter(spinnerAdapter);
+        dstLanguageSpinner.setAdapter(spinnerAdapter);
+        spinnerAdapter.notifyDataSetChanged();
     }
 
     public void setTranslationViewText(String translation) {
@@ -188,7 +226,7 @@ public class TranslatorFragment extends Fragment {
     }
 
     private void setDefaultLanguages() {
-        if (spinnerAdapter.getPosition(defaultSrcLang) > 0 && spinnerAdapter.getPosition(defaultDstLang) > 0) {
+        if (spinnerAdapter.getPosition(defaultSrcLang) >= 0 && spinnerAdapter.getPosition(defaultDstLang) >= 0) {
             srcLanguageSpinner.setSelection(spinnerAdapter.getPosition(defaultSrcLang));
             dstLanguageSpinner.setSelection(spinnerAdapter.getPosition(defaultDstLang));
         }

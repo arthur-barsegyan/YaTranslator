@@ -13,7 +13,6 @@ import ru.nsu.arturbarsegyan.yatranslator.DataManager;
 import ru.nsu.arturbarsegyan.yatranslator.ModelBundle;
 import ru.nsu.arturbarsegyan.yatranslator.Observer;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +22,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import ru.nsu.arturbarsegyan.yatranslator.TranslationData;
 import ru.nsu.arturbarsegyan.yatranslator.model.dto.SupportLanguages;
 import ru.nsu.arturbarsegyan.yatranslator.model.dto.TranslateResponse;
 import ru.nsu.arturbarsegyan.yatranslator.model.network.SupportLanguagesService;
@@ -82,6 +82,7 @@ public class ModelImpl implements Model  {
         return destinationLanguage;
     }
 
+    // TODO: [IMPORTANT] Create waiting timeout
     // TODO: Make async version of this task
     public void downloadAvailableLanguages(boolean notifyObserversMode) {
         SupportLanguagesService languages = httpSender.create(SupportLanguagesService.class);
@@ -152,6 +153,19 @@ public class ModelImpl implements Model  {
         String temp = sourceLanguage;
         sourceLanguage = destinationLanguage;
         destinationLanguage = temp;
+    }
+
+    // TODO: Make this task async
+    @Override
+    public boolean addFavoriteTranslation(String favoriteTranslation) {
+        TranslationData favoriteTranslationData = new TranslationData(favoriteTranslation, userLastTranslation,
+                                                                      sourceLanguage, destinationLanguage);
+        return dataManager.addFavoriteTranslation(favoriteTranslationData);
+    }
+
+    @Override
+    public ArrayList<TranslationData> getFavoriteTranslations() {
+        return dataManager.getFavoriteTranslations();
     }
 
     @Override

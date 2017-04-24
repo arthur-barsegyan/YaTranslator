@@ -14,13 +14,15 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/defaultYandexColor"
             android:orientation="horizontal">
 
             <Spinner
                 android:id="@+id/srcLanguage"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:spinnerMode="dialog" />
 
             <Button
                 android:id="@+id/changeDirections"
@@ -30,6 +32,7 @@
 
             <Spinner
                 android:id="@+id/dstLanguage"
+                android:spinnerMode="dialog"
                 android:layout_width="183dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
@@ -41,23 +44,62 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/userInputArea"
-                android:layout_width="match_parent"
-                android:layout_height="91dp"
-                android:layout_weight="0.21"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="@string/translation_input_area_hint"
-                android:text="" />
-
-            <TextView
-                android:id="@+id/translationView"
+            <RelativeLayout
+                android:id="@+id/mainRelativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textIsSelectable="true"
-                android:text="" />
+                android:layout_weight="0.01">
+
+                <EditText
+                    android:id="@+id/userInputArea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60pt"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/defaultYandexColor"
+                    android:ems="10"
+                    android:hint="@string/translation_input_area_hint"
+                    android:imeOptions="actionSend"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:scrollbars="vertical"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/favoriteTranslation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@id/userInputArea"
+                    android:text="В избранное" />
+
+                <Button
+                    android:id="@+id/clearInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/favoriteTranslation"
+                    android:layout_toRightOf="@id/userInputArea"
+                    android:layout_weight="1"
+                    android:text="Очистить" />
+
+                <TextView
+                    android:id="@+id/usageTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:text="@string/usage_text"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/translationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_above="@id/usageTextView"
+                    android:layout_below="@id/userInputArea"
+                    android:textIsSelectable="true"
+                    android:textSize="30sp" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 

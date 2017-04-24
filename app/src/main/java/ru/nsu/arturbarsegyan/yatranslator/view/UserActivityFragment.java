@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ru.nsu.arturbarsegyan.yatranslator.R;
+import ru.nsu.arturbarsegyan.yatranslator.TranslationData;
 import ru.nsu.arturbarsegyan.yatranslator.view.dummy.DummyContent;
 import ru.nsu.arturbarsegyan.yatranslator.view.dummy.DummyContent.DummyItem;
 
@@ -22,9 +23,11 @@ public class UserActivityFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
 
+        void setUserActivityFragmentOccurence();
+
         /* Async method, because we can getting information from anywhere (example, network).
            In our case, we get information from DB */
-        void getFavoriteTranslations();
+        ArrayList<TranslationData> getFavoriteTranslations();
         void showTranslation(String textLang, String favoriteTranslation);
         void removeFavorite(String favoriteTranslation);
     }
@@ -70,9 +73,15 @@ public class UserActivityFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, listener));
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(listener.getFavoriteTranslations(), listener));
         }
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        listener.setUserActivityFragmentOccurence();
     }
 
     public void setFavoritesTranslations(ArrayList<String> favoritesTranslationsList) {

@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ru.nsu.arturbarsegyan.yatranslator.R;
+import ru.nsu.arturbarsegyan.yatranslator.TranslationData;
 import ru.nsu.arturbarsegyan.yatranslator.view.UserActivityFragment.OnUserActivityInteractionListener;
 import ru.nsu.arturbarsegyan.yatranslator.view.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,10 +21,10 @@ import java.util.List;
  */
 
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
-    private final List<DummyItem> mValues;
+    private final List<TranslationData> mValues;
     private final UserActivityFragment.OnUserActivityInteractionListener mListener;
 
-    public MyItemRecyclerViewAdapter(List<DummyItem> items, UserActivityFragment.OnUserActivityInteractionListener listener) {
+    public MyItemRecyclerViewAdapter(ArrayList<TranslationData> items, OnUserActivityInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,9 +38,9 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        //holder.mItem = mValues.get(position).getSrcLang();
+        holder.mIdView.setText(mValues.get(position).getOriginalText());
+        holder.mContentView.setText(mValues.get(position).getTranslation());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +48,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    //mListener.onListFragmentInteraction(holder.mItem);
                 }
             }
         });

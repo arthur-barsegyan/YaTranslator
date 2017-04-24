@@ -1,5 +1,6 @@
 package ru.nsu.arturbarsegyan.yatranslator;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public interface DataManager {
@@ -7,7 +8,11 @@ public interface DataManager {
     // ...
 
     boolean updateTranslationLanguages(Map<String, String> languages);
-    boolean addFavoriteTranslation(/* Translation class */);
-    boolean addTranslationInHistory(/* Translation class */);
+
+    boolean addFavoriteTranslation(TranslationData translationData);
+    ArrayList<TranslationData> getFavoriteTranslations();
+
+    boolean addTranslationInHistory(TranslationData translationData);
+
     boolean updateUserSetting(/* Setting class */);
 }
