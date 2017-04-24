@@ -118,15 +118,15 @@ public class Presenter implements Observer {
         model.setDestinationLanguage(destinationLanguage);
     }
 
-    public void swapTranslationLanguages() {
-        model.swapTranslationLanguages();
-
-        String tempLang = currentSourceLang;
-        currentSourceLang = currentDestLang;
-        currentDestLang = tempLang;
-
-        updateViewLanguageDirection();
-    }
+//    public void swapTranslationLanguages() {
+//        model.swapTranslationLanguages();
+//
+//        String tempLang = currentSourceLang;
+//        currentSourceLang = currentDestLang;
+//        currentDestLang = tempLang;
+//
+//        updateViewLanguageDirection();
+//    }
 
     public void addFavoriteTranslation(String favoriteTranslation) {
         boolean isSuccessful = model.addFavoriteTranslation(favoriteTranslation);

@@ -17,8 +17,6 @@ public interface Model extends Observable {
     void setSourceLanguage(String language);
     void setDestinationLanguage(String language);
 
-    void swapTranslationLanguages();
-
     boolean addFavoriteTranslation(String favoriteTranslation);
     ArrayList<TranslationData> getFavoriteTranslations();
 

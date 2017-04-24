@@ -1,8 +1,6 @@
 package ru.nsu.arturbarsegyan.yatranslator.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,7 +48,7 @@ public class TranslatorFragment extends Fragment {
 
     private TextView translationView;
     private EditText userTextInputView;
-    private Button changeTranslationDirection;
+    private ImageButton changeTranslationDirection;
     private LinearLayout networkImageLayout;
 
     private OnTranslatorInteractionListener listener;
@@ -102,7 +100,6 @@ public class TranslatorFragment extends Fragment {
         }
 
         translationView = (TextView) view.findViewById(R.id.translationView);
-        //translationView.set
         userTextInputView = (EditText) view.findViewById(R.id.userInputArea);
         userTextInputView.setOnEditorActionListener(getTranslation);
         userTextInputView.setOnKeyListener(new View.OnKeyListener() {
@@ -112,10 +109,10 @@ public class TranslatorFragment extends Fragment {
             }
         });
 
-        changeTranslationDirection = (Button) view.findViewById(R.id.changeDirections);
+        changeTranslationDirection = (ImageButton) view.findViewById(R.id.changeDirections);
         changeTranslationDirection.setOnClickListener(changeTranslationDirectionListener);
 
-        Button addToFavorites = (Button) view.findViewById(R.id.favoriteTranslation);
+        ImageButton addToFavorites = (ImageButton) view.findViewById(R.id.favoriteTranslation);
         addToFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +120,7 @@ public class TranslatorFragment extends Fragment {
             }
         });
 
-        Button clearInput = (Button) view.findViewById(R.id.clearInput);
+        ImageButton clearInput = (ImageButton) view.findViewById(R.id.clearInput);
         clearInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

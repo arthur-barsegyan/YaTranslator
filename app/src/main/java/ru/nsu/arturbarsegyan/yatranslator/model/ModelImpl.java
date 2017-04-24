@@ -100,7 +100,8 @@ public class ModelImpl implements Model  {
     // TODO: Make async version of this task
     public void downloadAvailableLanguages(boolean notifyObserversMode) {
         SupportLanguagesService languages = httpSender.create(SupportLanguagesService.class);
-        Call<SupportLanguages> call = languages.getSupportLanguages(translatorAPIKey, sourceLanguage);
+        // Using hardcoded language ui ("ru") because this application doesn't support other languages
+        Call<SupportLanguages> call = languages.getSupportLanguages(translatorAPIKey, "ru");
 
         try {
             Response<SupportLanguages> supportLanguagesResponse = call.execute();
@@ -136,7 +137,7 @@ public class ModelImpl implements Model  {
             public void onResponse(Call<TranslateResponse> call, Response<TranslateResponse> response) {
                 if (!response.isSuccessful()) {
                     Log.w(TAG, "Server is not available or user reached the limit of requests");
-                    System.out.println(response.code() + response.message());
+                    System.out.println(response.message() + ' ' + response.code());
                     System.out.println(sourceLanguage + '-' + destinationLanguage);
                     return;
                 }
@@ -162,13 +163,6 @@ public class ModelImpl implements Model  {
     @Override
     public void setDestinationLanguage(String language) {
         destinationLanguage = supportLanguages.get(language);
-    }
-
-    @Override
-    public void swapTranslationLanguages() {
-        String temp = sourceLanguage;
-        sourceLanguage = destinationLanguage;
-        destinationLanguage = temp;
     }
 
     // TODO: Make this task async
